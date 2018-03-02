@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# macvendor
+# Description: Perform a MAC Address vendor lookup using macvendors.com
+# Usage: macvendor FC:FB:FB:01:FA:21
+#
+# URL: AJAlabs.com
+# Author: AJ Acevedo
+# Copyright (c) 2018 AJ Acevedo
+# License: MIT - https://opensource.org/licenses/MIT
+#
+# Version: v0.2
+#
+
+macVendor=$(curl -s "https://api.macvendors.com/$1")
+
+echo -e "$macVendor"
+
+exit 0

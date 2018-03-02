@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# myIP
+# Description: Show both the Public and Private IP Addresses on a Mac or Debian Linux system.
+# Usage: Drop this file in ~/bin, add ~/bin to your $PATH and just type myIP on the CLI. That's it!
+#
+# URL: AJAlabs.com
+# Author: AJ Acevedo
+# Copyright (c) 2016 AJ Acevedo
+# License: MIT - https://opensource.org/licenses/MIT
+#
+# Version: v0.2
+#
+
+# curl the public IP  
+publicIP=$(curl -s ifconfig.co)
+
+# Mac OS X Private IP Lookup
+if [ `uname -s` == "Darwin" ]; then
+  privateIP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2)
+fi
+
+# Linux Private IP Lookup (Debian)
+if [ `uname -s` == "Linux" ]; then
+ privateIP=$(hostname -I)
+fi
+
+echo -e "\nPrivate IP: $privateIP"
+echo -e "Public IP: $publicIP\n"
+
+exit 0
