@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# ssWhat
+# Description: A script to ask your local version of openssl what ciphers it knows, and then ask the server you specify which ones of those it speaks.
+# Usage: sswhat AJAlabs.com
+#
+
+if [[ -z $1 ]]; then
+    echo -e "\nYou need to provide a server as the first argument"
+    exit 1
+else
+    server=$1
+fi
+
+if [[ -z $2 ]]; then
+    echo -e "\nNo port specified, assuming 443"
+    port=443
+else
+    port=$2
+fi
+fullserver="$server:$port"
+workingciphers=()
+ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
+
+echo Obtaining cipher list from $(openssl version).
+
+for cipher in ${ciphers[@]}
+do
+echo -n Testing $cipher...
+result=$(echo -n | openssl s_client -cipher "$cipher" -connect $fullserver 2>&1)
+if [[ "$result" =~ ":error:" ]] ; then
+  error=$(echo -n $result | cut -d':' -f6)
+  echo NO \($error\)
+else
+  if [[ "$result" =~ "Cipher is ${cipher}" || "$result" =~ "Cipher    :" ]] ; then
+    echo YES
+    workingciphers=("${workingciphers[@]}" "${cipher}")
+  else
+    echo UNKNOWN RESPONSE
+    echo $result
+  fi
+fi
+done
+echo
+echo The following ciphers were accepted:
+for i in ${workingciphers[@]}
+do
+    echo $i
+done

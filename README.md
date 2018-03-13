@@ -1,6 +1,6 @@
 # AJ's bin
 
-Just some CLI scripts and tools I've either created or found on the Interwebs.
+Just some CLI scripts and tools I've either created, received or found online.
 
 
 Feel free to clone, modify, share, and use these dotfiles as your own.  
